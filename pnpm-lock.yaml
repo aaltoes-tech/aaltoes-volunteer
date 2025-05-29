@@ -7,6 +7,18 @@ settings:
 importers:
   .:
     dependencies:
+      "@fontsource/bytesized":
+        specifier: ^5.2.2
+        version: 5.2.2
+      "@fontsource/geist":
+        specifier: ^5.2.6
+        version: 5.2.6
+      "@fontsource/press-start-2p":
+        specifier: ^5.2.5
+        version: 5.2.5
+      "@fontsource/vt323":
+        specifier: ^5.2.5
+        version: 5.2.5
       "@linear/sdk":
         specifier: ^40.0.0
         version: 40.0.0
@@ -629,6 +641,30 @@ packages:
         integrity: sha512-0J+zgWxHN+xXONWIyPWKFMgVuJoZuGiIFu8yxk7RJjxkzpGmyja5wRFqZIVtjDVOQpV+Rw0iOAjYPE2eQyjr0w==,
       }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
+
+  "@fontsource/bytesized@5.2.2":
+    resolution:
+      {
+        integrity: sha512-1ztA/rpWXRrjwCF0heJb+yxaKwYHnOkfBCBvF3icFYYSpzXdR6eBcR3Dbqhgs5MIBEcsH56bZSkc5grVWJekFw==,
+      }
+
+  "@fontsource/geist@5.2.6":
+    resolution:
+      {
+        integrity: sha512-HKRFUn4fApQr9iGaVLUWG5vs+QYFqhKa5X7AFpT6Gey0Kx0ibvpFceMbMDDdlzzqPiGkvCuvYRUN55rvqXgibg==,
+      }
+
+  "@fontsource/press-start-2p@5.2.5":
+    resolution:
+      {
+        integrity: sha512-MmGLqhkv0kuoyeGgGkquEMRxJP6auc6918bKd8uTWP2beXMWLZZwCfXCqmskFLf0XYbtbzxuRXLjTnQBeTwsMQ==,
+      }
+
+  "@fontsource/vt323@5.2.5":
+    resolution:
+      {
+        integrity: sha512-DWGyXR/dvg8xGVmwBJVc/iEb8HKr9mW1PKHtI8z2riUwZFmfhN4EytUx+ODN+AgJPCVsuM0JWH85AkQqR0aPaA==,
+      }
 
   "@graphql-typed-document-node/core@3.2.0":
     resolution:
@@ -4643,6 +4679,14 @@ snapshots:
     dependencies:
       "@eslint/core": 0.14.0
       levn: 0.4.1
+
+  "@fontsource/bytesized@5.2.2": {}
+
+  "@fontsource/geist@5.2.6": {}
+
+  "@fontsource/press-start-2p@5.2.5": {}
+
+  "@fontsource/vt323@5.2.5": {}
 
   "@graphql-typed-document-node/core@3.2.0(graphql@15.10.1)":
     dependencies:

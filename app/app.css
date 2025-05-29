@@ -1,12 +1,17 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@fontsource/press-start-2p";
+@import "@fontsource/geist";
+@import "@fontsource/vt323";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-sans:
-    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Geist", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-game: "Press Start 2P", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "VT323", ui-sans-serif, system-ui, sans-serif;
 }
 
 html,

@@ -56,14 +56,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <div className="bg-background min-h-screen p-8">
       <div className="mx-auto max-w-4xl">
-        <h1 className="text-foreground mb-8 text-center text-3xl font-bold">
+        <h1 className="text-foreground font-game mb-8 text-center text-3xl font-bold">
           Volunteer Portal
         </h1>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Available Issues</TableHead>
-              <TableHead>Points</TableHead>
+              <TableHead className="font-mono text-xl">
+                Available Issues
+              </TableHead>
+              <TableHead className="font-mono text-xl">Points</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
