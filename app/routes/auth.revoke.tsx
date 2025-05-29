@@ -1,6 +1,7 @@
 import type { Route } from "./+types/auth.revoke";
 import { redirect } from "react-router";
-import { clearClientState, getClientState } from "../lib/oauth-config";
+import { linearService } from "../lib/linear";
+import { credentialStorage } from "~/lib/cred-storage";
 
 export async function action({ request }: Route.ActionArgs) {
   if (request.method !== "POST") {
@@ -8,32 +9,19 @@ export async function action({ request }: Route.ActionArgs) {
   }
 
   try {
-    const clientState = getClientState();
-    
-    // Optionally call Linear's revoke endpoint if we have an access token
-    if (clientState.accessToken) {
-      try {
-        await fetch('https://api.linear.app/oauth/revoke', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${clientState.accessToken}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-      } catch (error) {
-        console.error('Error revoking token at Linear:', error);
-        // Continue with local cleanup even if remote revocation fails
-      }
+    const tokenData = await credentialStorage.getToken("linear");
+
+    if (!tokenData) {
+      return redirect("/auth?error=no_token_found");
     }
-    
-    // Clear local client state
-    clearClientState();
-    
-    console.log('Successfully revoked Linear authorization');
-    
-    return redirect('/auth?success=revoked');
+
+    await linearService.clearLinearClient(tokenData);
+
+    console.log("Successfully revoked Linear authorization");
+
+    return redirect("/auth?success=revoked");
   } catch (error) {
-    console.error('Revoke error:', error);
-    return redirect('/auth?error=revoke_failed');
+    console.error("Revoke error:", error);
+    return redirect("/auth?error=revoke_failed");
   }
-} 
+}

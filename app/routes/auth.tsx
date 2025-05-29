@@ -1,5 +1,7 @@
 import type { Route } from "./+types/auth";
-import { getClientState, getOAuthConfig } from "../lib/oauth-config";
+import { oauth } from "~/lib/oauth";
+import { credentialStorage } from "~/lib/cred-storage";
+import { linearService } from "~/lib/linear";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,19 +11,45 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({}: Route.LoaderArgs) {
-  const clientState = getClientState();
-  const oauthConfig = getOAuthConfig();
-  
+  const oauthConfig = oauth.getOAuthConfig();
+  const tokenData = await credentialStorage.getToken("linear");
+
+  if (!tokenData) {
+    linearService.clearLinearClient();
+    return {
+      isLinearClientInitialized: false,
+      hasAccessToken: false,
+      hasOAuthConfig: !!oauthConfig,
+      oauthConfigClientId:
+        oauthConfig?.clientId?.substring(0, 8) + "..." || "Not set",
+      isTokenExpired: false,
+      tokenExpirationInfo: null,
+    };
+  }
+
+  const tokenInfo = await oauth.getTokenExpirationInfo(tokenData);
+  const linearClient = await linearService.getLinearClient();
+
   return {
-    isLinearClientInitialized: clientState.isInitialized,
-    hasAccessToken: !!clientState.accessToken,
+    isLinearClientInitialized: !!linearClient,
+    hasAccessToken: !!tokenData,
     hasOAuthConfig: !!oauthConfig,
-    oauthConfigClientId: oauthConfig?.clientId?.substring(0, 8) + '...' || 'Not set',
+    oauthConfigClientId:
+      oauthConfig?.clientId?.substring(0, 8) + "..." || "Not set",
+    isTokenExpired: tokenInfo.isExpired,
+    tokenExpirationInfo: tokenInfo,
   };
 }
 
 export default function Auth({ loaderData }: Route.ComponentProps) {
-  const { isLinearClientInitialized, hasAccessToken, hasOAuthConfig, oauthConfigClientId } = loaderData;
+  const {
+    isLinearClientInitialized,
+    hasAccessToken,
+    hasOAuthConfig,
+    oauthConfigClientId,
+    isTokenExpired,
+    tokenExpirationInfo,
+  } = loaderData;
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -34,71 +62,131 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
             Manage your Linear API integration with actor=app authorization
           </p>
         </div>
-        
+
         <div className="mt-8 space-y-6">
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Status</h3>
-            
+
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">OAuth Configuration:</span>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  hasOAuthConfig ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
-                  {hasOAuthConfig ? '✓ Configured' : '✗ Not configured'}
+                <span className="text-sm text-gray-600">
+                  OAuth Configuration:
+                </span>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    hasOAuthConfig
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {hasOAuthConfig ? "✓ Configured" : "✗ Not configured"}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Client ID:</span>
-                <span className="text-sm text-gray-900 font-mono">{oauthConfigClientId}</span>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Access Token:</span>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  hasAccessToken ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {hasAccessToken ? '✓ Available' : '✗ Not available'}
+                <span className="text-sm text-gray-900 font-mono">
+                  {oauthConfigClientId}
                 </span>
               </div>
-              
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Access Token:</span>
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    hasAccessToken && !isTokenExpired
+                      ? "bg-green-100 text-green-800"
+                      : isTokenExpired
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {hasAccessToken && !isTokenExpired
+                    ? "✓ Valid"
+                    : isTokenExpired
+                    ? "✗ Expired"
+                    : "✗ Not available"}
+                </span>
+              </div>
+
+              {!!tokenExpirationInfo && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Token Expires:</span>
+                  <span
+                    className={`text-xs ${
+                      tokenExpirationInfo.isExpired
+                        ? "text-red-600"
+                        : "text-gray-900"
+                    }`}
+                  >
+                    {tokenExpirationInfo.isExpired
+                      ? "Expired"
+                      : tokenExpirationInfo.timeUntilExpiration
+                      ? `In ${tokenExpirationInfo.timeUntilExpiration}`
+                      : "Unknown"}
+                  </span>
+                </div>
+              )}
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Linear Client:</span>
-                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  isLinearClientInitialized ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {isLinearClientInitialized ? '✓ Initialized' : '✗ Not initialized'}
+                <span
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    isLinearClientInitialized
+                      ? "bg-green-100 text-green-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {isLinearClientInitialized
+                    ? "✓ Initialized"
+                    : "✗ Not initialized"}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Storage:</span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  ✓ In-Memory
                 </span>
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white shadow rounded-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Actions</h3>
-            
-            {!isLinearClientInitialized ? (
+
+            {!isLinearClientInitialized || isTokenExpired ? (
               <div className="space-y-4">
                 <p className="text-sm text-gray-600">
-                  Authorize this application to act on behalf of your Linear workspace using the actor=app flow. 
-                  This allows the application to create issues and comments as the app rather than individual users.
+                  {isTokenExpired
+                    ? "Your token has expired. Re-authorize to continue using the Linear API."
+                    : "Authorize this application to act on behalf of your Linear workspace using the actor=app flow. This allows the application to create issues and comments as the app rather than individual users."}
                 </p>
-                
+
                 <form action="/auth/authorize" method="post">
                   <button
                     type="submit"
                     className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
-                    Authorize with Linear (actor=app)
+                    {isTokenExpired
+                      ? "Re-authorize with Linear"
+                      : "Authorize with Linear (actor=app)"}
                   </button>
                 </form>
               </div>
             ) : (
               <div className="space-y-4">
                 <p className="text-sm text-green-600">
-                  ✓ Successfully authorized! The Linear client is initialized and ready to use.
+                  ✓ Successfully authorized! The Linear client is initialized
+                  and ready to use.
+                  {!!tokenExpirationInfo && (
+                    <span className="block text-gray-600 mt-1">
+                      Token expires in {tokenExpirationInfo.timeUntilExpiration}
+                      .
+                    </span>
+                  )}
                 </p>
-                
+
                 <form action="/auth/revoke" method="post">
                   <button
                     type="submit"
@@ -110,7 +198,7 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
               </div>
             )}
           </div>
-          
+
           <div className="text-center">
             <a
               href="/"
@@ -123,4 +211,4 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
       </div>
     </div>
   );
-} 
+}
