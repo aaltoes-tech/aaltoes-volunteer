@@ -108,15 +108,15 @@ function getTokenExpirationInfo(token: TokenData): {
 
   let timeString = "";
   if (days > 0) {
-    timeString += `${days} day${days !== 1 ? "s" : ""}`;
-    if (hours > 0) timeString += `, ${hours} hour${hours !== 1 ? "s" : ""}`;
+    timeString += `${days.toString()} day${days !== 1 ? "s" : ""}`;
+    if (hours > 0) timeString += `, ${hours.toString()} hour${hours !== 1 ? "s" : ""}`;
   } else if (hours > 0) {
-    timeString += `${hours} hour${hours !== 1 ? "s" : ""}`;
+    timeString += `${hours.toString()} hour${hours !== 1 ? "s" : ""}`;
   } else {
     const minutes = Math.floor(
       (msUntilExpiration % (60 * 60 * 1000)) / (60 * 1000)
     );
-    timeString = `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+    timeString = `${minutes.toString()} minute${minutes !== 1 ? "s" : ""}`;
   }
 
   return {

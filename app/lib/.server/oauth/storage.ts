@@ -27,7 +27,7 @@ export interface CredentialStorageService {
 
 // In-memory storage implementation
 export class InMemoryCredentialStorage implements CredentialStorageService {
-  private tokens: Map<string, TokenData> = new Map();
+  private tokens = new Map<string, TokenData>();
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async storeToken(tokenData: TokenData): Promise<void> {
@@ -59,7 +59,7 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
 
   // eslint-disable-next-line @typescript-eslint/require-await
   async getToken(provider = "linear"): Promise<TokenData | null> {
-    return this.tokens.get(provider) || null;
+    return this.tokens.get(provider) ?? null;
   }
 
   async hasValidToken(provider = "linear"): Promise<boolean> {
@@ -92,7 +92,7 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
     }
 
     if (cleanedCount > 0) {
-      console.log(`Cleaned up ${cleanedCount} expired tokens`);
+      console.log(`Cleaned up ${cleanedCount.toString()} expired tokens`);
     }
 
     return cleanedCount;
@@ -198,7 +198,7 @@ export class RedisCredentialStorage implements CredentialStorageService {
     }
 
     try {
-      return deserialize(serializedData);
+      return await deserialize(serializedData);
     } catch (error) {
       console.error(`Failed to deserialize token for ${provider}:`, error);
       // Clean up corrupted data
@@ -222,7 +222,7 @@ export class RedisCredentialStorage implements CredentialStorageService {
       const keys = await redis.keys(`${this.keyPrefix}*`);
       if (keys.length > 0) {
         await redis.del(...keys);
-        console.log(`Cleared ${keys.length} tokens`);
+        console.log(`Cleared ${keys.length.toString()} tokens`);
       } else {
         console.log("No tokens to clear");
       }
@@ -256,7 +256,7 @@ export class RedisCredentialStorage implements CredentialStorageService {
     }
 
     if (cleanedCount > 0) {
-      console.log(`Cleaned up ${cleanedCount} expired/corrupted tokens`);
+      console.log(`Cleaned up ${cleanedCount.toString()} expired/corrupted tokens`);
     }
 
     return cleanedCount;

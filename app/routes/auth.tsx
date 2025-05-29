@@ -23,8 +23,9 @@ export async function loader({ request }: Route.LoaderArgs) {
       isLinearClientInitialized: false,
       hasAccessToken: false,
       hasOAuthConfig: !!oauthConfig,
-      oauthConfigClientId:
-        oauthConfig?.clientId?.substring(0, 8) + "..." || "Not set",
+      oauthConfigClientId: oauthConfig?.clientId.substring(0, 8)
+        ? oauthConfig.clientId.substring(0, 8) + "..."
+        : "Not set",
       isTokenExpired: false,
       tokenExpirationInfo: null,
     };
@@ -37,8 +38,9 @@ export async function loader({ request }: Route.LoaderArgs) {
     isLinearClientInitialized: !!linearClient,
     hasAccessToken: !!tokenData,
     hasOAuthConfig: !!oauthConfig,
-    oauthConfigClientId:
-      oauthConfig?.clientId?.substring(0, 8) + "..." || "Not set",
+    oauthConfigClientId: oauthConfig?.clientId.substring(0, 8)
+      ? oauthConfig.clientId.substring(0, 8) + "..."
+      : "Not set",
     isTokenExpired: tokenInfo.isExpired,
     tokenExpirationInfo: tokenInfo,
   };

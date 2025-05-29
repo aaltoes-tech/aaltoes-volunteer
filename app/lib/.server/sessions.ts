@@ -1,11 +1,11 @@
 import { createCookieSessionStorage } from "react-router";
 
-type SessionData = {
+interface SessionData {
   isAdminAuthenticated: boolean;
   userId: string;
 };
 
-type SessionFlashData = {
+interface SessionFlashData {
   error: string;
   success: string;
 };
@@ -18,7 +18,7 @@ const { getSession, commitSession, destroySession } =
       maxAge: 60 * 60 * 24, // 24 hours
       path: "/",
       sameSite: "lax",
-      secrets: [process.env.SESSION_SECRET || "default-secret-change-in-production"],
+      secrets: [process.env.SESSION_SECRET ?? "default-secret-change-in-production"],
       secure: process.env.NODE_ENV === "production",
     },
   });
@@ -38,7 +38,7 @@ export async function requireAdminAuth(request: Request) {
 export async function getAdminUser(request: Request) {
   const session = await getSession(request.headers.get("Cookie"));
   return {
-    isAuthenticated: session.get("isAdminAuthenticated") || false,
+    isAuthenticated: session.get("isAdminAuthenticated") ?? false,
     userId: session.get("userId"),
   };
 } 
