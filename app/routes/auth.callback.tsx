@@ -43,7 +43,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     // Initialize Linear client with the access token and expiration
     await credentialStorage.storeToken(tokenData);
-    linearService.initializeLinearClient(tokenData);
 
     console.log(
       `Successfully authorized Linear client with actor=app (expires at ${new Date(

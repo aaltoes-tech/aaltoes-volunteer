@@ -18,7 +18,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const tokenData = await credentialStorage.getToken("linear");
 
   if (!tokenData) {
-    linearService.clearLinearClient();
+    await linearService.clearLinearClient();
     return {
       isLinearClientInitialized: false,
       hasAccessToken: false,
@@ -31,7 +31,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const tokenInfo = await oauth.getTokenExpirationInfo(tokenData);
-  const linearClient = await linearService.getLinearClient();
+  const linearClient = linearService.getLinearClient({ token: tokenData });
 
   return {
     isLinearClientInitialized: !!linearClient,

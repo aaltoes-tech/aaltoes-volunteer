@@ -1,25 +1,9 @@
 import { LinearClient } from "@linear/sdk";
 import type { TokenData } from "./oauth";
-import { credentialStorage } from "./cred-storage";
-
-const token = await credentialStorage.getToken("linear");
 
 let linearClient: LinearClient | null = null;
 
-if (token) {
-  linearClient = new LinearClient({ accessToken: token.accessToken });
-}
-
-// Get the Linear client instance (auto-initialize if needed)
-async function initializeLinearClient(token: TokenData): Promise<LinearClient> {
-  if (!linearClient) {
-    linearClient = new LinearClient({ accessToken: token.accessToken });
-  }
-
-  return linearClient;
-}
-
-export async function clearLinearClient(token?: TokenData): Promise<void> {
+async function clearLinearClient(token?: TokenData): Promise<void> {
   if (!token) {
     linearClient = null;
     return;
@@ -41,12 +25,15 @@ export async function clearLinearClient(token?: TokenData): Promise<void> {
   linearClient = null;
 }
 
-async function getLinearClient(): Promise<LinearClient | null> {
+function getLinearClient({ token }: { token: TokenData }): LinearClient | null {
+  if (linearClient) {
+    return linearClient;
+  }
+  linearClient = new LinearClient({ accessToken: token.accessToken });
   return linearClient;
 }
 
 export const linearService = {
-  initializeLinearClient,
   clearLinearClient,
   getLinearClient,
 };

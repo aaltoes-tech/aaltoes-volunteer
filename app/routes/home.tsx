@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { credentialStorage } from "~/lib/cred-storage";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -18,7 +19,13 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({}: Route.LoaderArgs) {
-  const linearClient = await linearService.getLinearClient();
+  const token = await credentialStorage.getToken("linear");
+  if (!token) {
+    return data({
+      issues: [],
+    });
+  }
+  const linearClient = linearService.getLinearClient({ token });
   if (!linearClient) {
     return data({
       issues: [],
