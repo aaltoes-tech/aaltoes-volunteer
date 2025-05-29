@@ -9,7 +9,6 @@
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "lint:check": "eslint . --quiet",
     "format": "prettier --check . --ignore-path .gitignore",
     "format:fix": "prettier --write . --ignore-path .gitignore"
   },
