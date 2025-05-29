@@ -35,14 +35,19 @@ export async function loader() {
   const issues = await linearClient.issues({
     filter: {
       assignee: {
-        app: {
+        isMe: {
           eq: true,
         },
       },
     },
   });
   return data({
-    issues: issues.nodes,
+    issues: issues.nodes.map((issue) => ({
+      id: issue.id,
+      title: issue.title,
+      description: issue.description,
+      estimate: issue.estimate ?? "1",
+    })),
   });
 }
 
@@ -58,12 +63,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Available Issues</TableHead>
+              <TableHead>Points</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {issues.map((issue) => (
               <TableRow key={issue.id}>
                 <TableCell>{issue.title}</TableCell>
+                <TableCell>{issue.estimate}</TableCell>
               </TableRow>
             ))}
           </TableBody>
