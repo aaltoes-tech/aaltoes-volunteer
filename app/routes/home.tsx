@@ -1,6 +1,16 @@
+import { Info } from "lucide-react";
 import { data } from "react-router";
 
 import type { Route } from "./+types/home";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -66,14 +76,35 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 Available Issues
               </TableHead>
               <TableHead className="font-mono text-xl">Points</TableHead>
+              <TableHead className="font-mono text-xl">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {issues.map((issue) => (
-              <TableRow key={issue.id}>
-                <TableCell>{issue.title}</TableCell>
-                <TableCell>{issue.estimate}</TableCell>
-              </TableRow>
+              <Dialog key={issue.id}>
+                <TableRow>
+                  <TableCell>{issue.title}</TableCell>
+                  <TableCell>{issue.estimate}</TableCell>
+                  <TableCell>
+                    <DialogTrigger asChild>
+                      <Button className="-my-1.5" variant="ghost" size="icon">
+                        <Info className="h-4 w-4" />
+                      </Button>
+                    </DialogTrigger>
+                  </TableCell>
+                </TableRow>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{issue.title}</DialogTitle>
+                  </DialogHeader>
+                  <p className="text-foreground text-sm whitespace-pre-wrap">
+                    {issue.description}
+                  </p>
+                  <DialogFooter>
+                    <Button disabled>Claim (Coming Soon)</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             ))}
           </TableBody>
         </Table>
