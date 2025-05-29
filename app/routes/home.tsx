@@ -49,22 +49,26 @@ export async function loader() {
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { issues } = loaderData;
   return (
-    <div>
-      <h1>Welcome</h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {issues.map((issue) => (
-            <TableRow key={issue.id}>
-              <TableCell>{issue.title}</TableCell>
+    <div className="bg-background min-h-screen p-8">
+      <div className="mx-auto max-w-4xl">
+        <h1 className="text-foreground mb-8 text-center text-3xl font-bold">
+          Volunteer Portal
+        </h1>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Available Issues</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {issues.map((issue) => (
+              <TableRow key={issue.id}>
+                <TableCell>{issue.title}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
