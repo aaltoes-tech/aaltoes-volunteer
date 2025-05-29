@@ -1,8 +1,8 @@
 import { data, Form, redirect } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 
 import type { Route } from "./+types/admin.login";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { getAdminConfig, validateAdminCredentials } from "~/lib/.server/auth";
 import { commitSession, getSession } from "~/lib/.server/sessions";
 
@@ -31,7 +31,7 @@ export async function loader({ request }: Route.LoaderArgs) {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
-    }
+    },
   );
 }
 
@@ -78,13 +78,13 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
 
   if (!hasCredentials) {
     return (
-      <div className="min-h-screen bg-muted px-4 py-12 sm:px-6 lg:px-8">
+      <div className="bg-muted min-h-screen px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-md">
           <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-foreground">
+            <h2 className="text-foreground mt-6 text-3xl font-extrabold">
               Admin Login
             </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mt-2 text-sm">
               Administrative access required
             </p>
           </div>
@@ -109,13 +109,13 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <div className="min-h-screen bg-muted px-4 py-12 sm:px-6 lg:px-8">
+    <div className="bg-muted min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-foreground">
+          <h2 className="text-foreground mt-6 text-3xl font-extrabold">
             Admin Login
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             Sign in with your admin credentials
           </p>
         </div>
@@ -136,7 +136,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
                 <div>
                   <label
                     htmlFor="username"
-                    className="block text-sm font-medium text-foreground"
+                    className="text-foreground block text-sm font-medium"
                   >
                     Username
                   </label>
@@ -147,7 +147,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
                       type="text"
                       autoComplete="username"
                       required
-                      className="block w-full rounded-md border border-input bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring focus:outline-none focus:ring-2 sm:text-sm"
+                      className="border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring block w-full rounded-md border px-3 py-2 focus:ring-2 focus:outline-none sm:text-sm"
                     />
                   </div>
                 </div>
@@ -155,7 +155,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-medium text-foreground"
+                    className="text-foreground block text-sm font-medium"
                   >
                     Password
                   </label>
@@ -166,7 +166,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
                       type="password"
                       autoComplete="current-password"
                       required
-                      className="block w-full rounded-md border border-input bg-background px-3 py-2 text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring focus:outline-none focus:ring-2 sm:text-sm"
+                      className="border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring block w-full rounded-md border px-3 py-2 focus:ring-2 focus:outline-none sm:text-sm"
                     />
                   </div>
                 </div>

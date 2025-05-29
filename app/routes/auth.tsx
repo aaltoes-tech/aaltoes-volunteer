@@ -1,11 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Link } from "react-router";
+
 import type { Route } from "./+types/auth";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { linearService } from "~/lib/.server/linear";
 import { oauth } from "~/lib/.server/oauth";
 import { credentialStorage } from "~/lib/.server/oauth/storage";
 import { requireAdminAuth } from "~/lib/.server/sessions";
-import { Link } from "react-router";
-import { Button } from "~/components/ui/button";
 
 export function meta() {
   return [
@@ -60,13 +61,13 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
   } = loaderData;
 
   return (
-    <div className="min-h-screen bg-muted px-4 py-12 sm:px-6 lg:px-8">
+    <div className="bg-muted min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-foreground">
+          <h2 className="text-foreground mt-6 text-3xl font-extrabold">
             Linear OAuth Authentication
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             Manage your Linear API integration with actor=app authorization
           </p>
         </div>
@@ -79,7 +80,7 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
             <CardContent>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     OAuth Configuration:
                   </span>
                   <span
@@ -94,16 +95,16 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     Client ID:
                   </span>
-                  <span className="font-mono text-sm text-foreground">
+                  <span className="text-foreground font-mono text-sm">
                     {oauthConfigClientId}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     Access Token:
                   </span>
                   <span
@@ -111,21 +112,21 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
                       hasAccessToken && !isTokenExpired
                         ? "bg-green-100 text-green-800"
                         : isTokenExpired
-                        ? "bg-red-100 text-red-800"
-                        : "bg-muted text-muted-foreground"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {hasAccessToken && !isTokenExpired
                       ? "✓ Valid"
                       : isTokenExpired
-                      ? "✗ Expired"
-                      : "✗ Not available"}
+                        ? "✗ Expired"
+                        : "✗ Not available"}
                   </span>
                 </div>
 
                 {!!tokenExpirationInfo && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-muted-foreground text-sm">
                       Token Expires:
                     </span>
                     <span
@@ -138,14 +139,14 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
                       {tokenExpirationInfo.isExpired
                         ? "Expired"
                         : tokenExpirationInfo.timeUntilExpiration
-                        ? `In ${tokenExpirationInfo.timeUntilExpiration}`
-                        : "Unknown"}
+                          ? `In ${tokenExpirationInfo.timeUntilExpiration}`
+                          : "Unknown"}
                     </span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     Linear Client:
                   </span>
                   <span
@@ -162,7 +163,7 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     Storage:
                   </span>
                   <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
@@ -180,7 +181,7 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
             <CardContent>
               {!isLinearClientInitialized || isTokenExpired ? (
                 <div className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {isTokenExpired
                       ? "Your token has expired. Re-authorize to continue using the Linear API."
                       : "Authorize this application to act on behalf of your Linear workspace using the actor=app flow. This allows the application to create issues and comments as the app rather than individual users."}
@@ -200,7 +201,7 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
                     ✓ Successfully authorized! The Linear client is initialized
                     and ready to use.
                     {!!tokenExpirationInfo && (
-                      <span className="mt-1 block text-muted-foreground">
+                      <span className="text-muted-foreground mt-1 block">
                         Token expires in{" "}
                         {tokenExpirationInfo.timeUntilExpiration}.
                       </span>

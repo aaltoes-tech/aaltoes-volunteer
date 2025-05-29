@@ -46,8 +46,8 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     console.log(
       `Successfully authorized Linear client with actor=app (expires at ${new Date(
-        tokenData.expiresAt
-      ).toUTCString()})`
+        tokenData.expiresAt,
+      ).toUTCString()})`,
     );
 
     // Redirect back to auth page
@@ -60,10 +60,10 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function AuthCallback() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
+    <div className="bg-muted flex min-h-screen items-center justify-center">
       <div className="text-center">
-        <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
-        <p className="mt-4 text-muted-foreground">
+        <div className="border-primary mx-auto h-12 w-12 animate-spin rounded-full border-b-2"></div>
+        <p className="text-muted-foreground mt-4">
           Processing authorization...
         </p>
       </div>
