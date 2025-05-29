@@ -18,6 +18,7 @@
     "@fontsource/press-start-2p": "^5.2.5",
     "@fontsource/vt323": "^5.2.5",
     "@linear/sdk": "^40.0.0",
+    "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@react-router/node": "^7.5.3",
