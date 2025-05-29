@@ -11,8 +11,6 @@ export const env = createEnv({
     SESSION_SECRET: z.string().min(1),
     KV_REST_API_URL: z.string().min(1),
     KV_REST_API_TOKEN: z.string().min(1),
-
-    ORG_NAME: z.string().min(1).optional(),
   },
 
   /**
@@ -21,7 +19,9 @@ export const env = createEnv({
    */
   clientPrefix: "PUBLIC_",
 
-  client: {},
+  client: {
+    PUBLIC_ORG_NAME: z.string().min(1).optional(),
+  },
 
   /**
    * What object holds the environment variables at runtime. This is usually
