@@ -1,87 +1,68 @@
-# Welcome to React Router!
+# AaltoES TaskBridge
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+A React Router v7 application with Linear OAuth integration using the `actor=app` authorization flow.
 
 ## Features
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- Linear OAuth2 integration with `actor=app` parameter
+- Server-side authorization flow implementation
+- Real-time status display of Linear client initialization
+- Secure state management for OAuth flow
 
-## Getting Started
+## Setup
 
-### Installation
-
-Install the dependencies:
+### 1. Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
-### Development
+### 2. Configure Linear OAuth
 
-Start the development server with HMR:
+1. Go to your Linear workspace settings
+2. Create a new OAuth2 Application
+3. Set the redirect URL to: `http://localhost:5173/auth/callback` (for development)
+4. Note down your Client ID and Client Secret
+
+### 3. Environment Variables
+
+Create a `.env` file (optional - the app will use placeholder values for demo):
 
 ```bash
-npm run dev
+LINEAR_CLIENT_ID=your_linear_client_id
+LINEAR_CLIENT_SECRET=your_linear_client_secret
 ```
 
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
+### 4. Run the Application
 
 ```bash
-npm run build
+pnpm dev
 ```
 
-## Deployment
+Visit `http://localhost:5173` and navigate to the "Linear OAuth (actor=app)" link to start the authorization flow.
 
-### Docker Deployment
+## OAuth Flow
 
-To build and run using Docker:
+The application implements the Linear OAuth2 flow with the following features:
 
-```bash
-docker build -t my-app .
+1. **Actor=App Authorization**: Uses `actor=app` parameter so the application acts as itself rather than individual users
+2. **Server-side Implementation**: All OAuth logic is handled server-side for security
+3. **State Validation**: Implements CSRF protection using state parameters
+4. **In-memory Storage**: Credentials and tokens are stored in memory (for production, use persistent storage)
 
-# Run the container
-docker run -p 3000:3000 my-app
-```
+## Routes
 
-The containerized application can be deployed to any platform that supports Docker, including:
+- `/` - Home page with link to OAuth
+- `/auth` - OAuth status and authorization management
+- `/auth/authorize` - Redirects to Linear OAuth
+- `/auth/callback` - Handles OAuth callback
+- `/auth/revoke` - Revokes authorization
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+## Technical Details
 
-### DIY Deployment
+- **Framework**: React Router v7
+- **OAuth Library**: openid-client (v6)
+- **Linear SDK**: @linear/sdk
+- **Styling**: Tailwind CSS
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+The implementation follows Linear's OAuth2 documentation and uses the `actor=app` parameter to allow the application to create issues and comments as the app rather than individual users.
