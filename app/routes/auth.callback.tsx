@@ -4,8 +4,11 @@ import { oauth } from "../lib/oauth";
 import { linearService } from "../lib/linear";
 import { stateStore } from "./auth.authorize";
 import { credentialStorage } from "~/lib/cred-storage";
+import { requireAdminAuth } from "~/lib/sessions.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
+  await requireAdminAuth(request);
+
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");

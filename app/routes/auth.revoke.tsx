@@ -2,8 +2,11 @@ import type { Route } from "./+types/auth.revoke";
 import { redirect } from "react-router";
 import { linearService } from "../lib/linear";
 import { credentialStorage } from "~/lib/cred-storage";
+import { requireAdminAuth } from "~/lib/sessions.server";
 
 export async function action({ request }: Route.ActionArgs) {
+  await requireAdminAuth(request);
+
   if (request.method !== "POST") {
     throw new Response("Method not allowed", { status: 405 });
   }

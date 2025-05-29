@@ -1,11 +1,13 @@
 import type { Route } from "./+types/auth.authorize";
 import { redirect } from "react-router";
 import { oauth } from "../lib/oauth";
+import { requireAdminAuth } from "~/lib/sessions.server";
 
 // Store state in memory for validation (in production, use session storage)
 const stateStore = new Map<string, { timestamp: number }>();
 
 export async function action({ request }: Route.ActionArgs) {
+  await requireAdminAuth(request);
   if (request.method !== "POST") {
     throw new Response("Method not allowed", { status: 405 });
   }

@@ -1,7 +1,14 @@
 import { LinearClient } from "@linear/sdk";
 import type { TokenData } from "./oauth";
+import { credentialStorage } from "./cred-storage";
+
+const token = await credentialStorage.getToken("linear");
 
 let linearClient: LinearClient | null = null;
+
+if (token) {
+  linearClient = new LinearClient({ accessToken: token.accessToken });
+}
 
 // Get the Linear client instance (auto-initialize if needed)
 async function initializeLinearClient(token: TokenData): Promise<LinearClient> {
@@ -19,15 +26,15 @@ export async function clearLinearClient(token?: TokenData): Promise<void> {
   }
 
   try {
-    await fetch('https://api.linear.app/oauth/revoke', {
-      method: 'POST',
+    await fetch("https://api.linear.app/oauth/revoke", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${token.accessToken}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${token.accessToken}`,
+        "Content-Type": "application/x-www-form-urlencoded",
       },
     });
   } catch (error) {
-    console.error('Error revoking token at Linear:', error);
+    console.error("Error revoking token at Linear:", error);
     // Continue with local cleanup even if remote revocation fails
   }
 

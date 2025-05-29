@@ -2,6 +2,7 @@ import type { Route } from "./+types/auth";
 import { oauth } from "~/lib/oauth";
 import { credentialStorage } from "~/lib/cred-storage";
 import { linearService } from "~/lib/linear";
+import { requireAdminAuth } from "~/lib/sessions.server";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,7 +11,9 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
+  await requireAdminAuth(request);
+
   const oauthConfig = oauth.getOAuthConfig();
   const tokenData = await credentialStorage.getToken("linear");
 
