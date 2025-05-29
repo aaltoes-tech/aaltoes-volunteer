@@ -101,9 +101,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   <p className="text-foreground text-sm whitespace-pre-wrap">
                     {issue.description}
                   </p>
-                  <DialogFooter>
-                    <Button disabled>Claim (Coming Soon)</Button>
-                  </DialogFooter>
                 </DialogContent>
               </Dialog>
             ))}
