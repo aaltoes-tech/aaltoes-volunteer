@@ -1,7 +1,7 @@
-export async function validateAdminCredentials(
+export function validateAdminCredentials(
   username: string,
   password: string
-): Promise<boolean> {
+): boolean {
   const adminUsername = process.env.ADMIN_USERNAME;
   const adminPassword = process.env.ADMIN_PASSWORD;
 

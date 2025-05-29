@@ -22,10 +22,10 @@ function getOAuthConfig(): OAuthConfig | null {
 }
 
 // Generate authorization URL for Linear with actor=app
-async function generateAuthorizationUrl(
+function generateAuthorizationUrl(
   redirectUri: string,
   state: string
-): Promise<string> {
+): string {
   const config = getOAuthConfig();
   if (!config) {
     throw new Error("OAuth configuration not set");
@@ -71,7 +71,10 @@ async function exchangeCodeForToken(
     throw new Error(`Token exchange failed: ${response.statusText}`);
   }
 
-  const data = await response.json();
+  const data = await response.json() as {
+    access_token: string;
+    expires_in: number;
+  };
   return {
     accessToken: data.access_token,
     expiresAt: Date.now() + (data.expires_in || 315705599) * 1000, // Default to ~10 years if not provided
@@ -80,16 +83,16 @@ async function exchangeCodeForToken(
   };
 }
 
-async function shouldRefreshToken(tokenData: TokenData): Promise<boolean> {
+function shouldRefreshToken(tokenData: TokenData): boolean {
   const twentyFourHoursFromNow = Date.now() + 24 * 60 * 60 * 1000;
   return tokenData.expiresAt < twentyFourHoursFromNow;
 }
 
-async function getTokenExpirationInfo(token: TokenData): Promise<{
+function getTokenExpirationInfo(token: TokenData): {
   expiresAt: Date | null;
   timeUntilExpiration: string | null;
   isExpired: boolean;
-}> {
+} {
   const expiresAt = new Date(token.expiresAt);
   const now = Date.now();
   const msUntilExpiration = token.expiresAt - now;

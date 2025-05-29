@@ -29,7 +29,7 @@ export async function requireAdminAuth(request: Request) {
   const session = await getSession(request.headers.get("Cookie"));
   
   if (!session.get("isAdminAuthenticated")) {
-    throw new Response("Unauthorized", { status: 401 });
+    throw new Error("Unauthorized");
   }
   
   return session;

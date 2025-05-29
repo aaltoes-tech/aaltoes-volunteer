@@ -7,7 +7,7 @@ import {
   destroySession,
 } from "~/lib/.server/sessions";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Admin Logout" },
     { name: "description", content: "Admin logout page" },

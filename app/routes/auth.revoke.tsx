@@ -8,7 +8,7 @@ export async function action({ request }: Route.ActionArgs) {
   await requireAdminAuth(request);
 
   if (request.method !== "POST") {
-    throw new Response("Method not allowed", { status: 405 });
+    throw new Error("Method not allowed");
   }
 
   try {

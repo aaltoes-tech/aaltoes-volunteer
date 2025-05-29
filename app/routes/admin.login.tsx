@@ -3,7 +3,7 @@ import type { Route } from "./+types/admin.login";
 import { getSession, commitSession } from "~/lib/.server/sessions";
 import { validateAdminCredentials, getAdminConfig } from "~/lib/.server/auth";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Admin Login" },
     { name: "description", content: "Admin authentication" },
@@ -48,7 +48,7 @@ export async function action({ request }: Route.ActionArgs) {
     });
   }
 
-  const isValid = await validateAdminCredentials(username, password);
+  const isValid = validateAdminCredentials(username, password);
 
   if (!isValid) {
     session.flash("error", "Invalid username or password");

@@ -4,7 +4,7 @@ import { credentialStorage } from "~/lib/.server/oauth/storage";
 import { linearService } from "~/lib/.server/linear";
 import { requireAdminAuth } from "~/lib/.server/sessions";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Linear OAuth Authentication" },
     { name: "description", content: "Authenticate with Linear API" },
@@ -30,7 +30,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     };
   }
 
-  const tokenInfo = await oauth.getTokenExpirationInfo(tokenData);
+  const tokenInfo = oauth.getTokenExpirationInfo(tokenData);
   const linearClient = linearService.getLinearClient({ token: tokenData });
 
   return {

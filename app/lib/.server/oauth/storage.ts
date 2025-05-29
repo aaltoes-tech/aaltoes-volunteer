@@ -29,6 +29,7 @@ export interface CredentialStorageService {
 export class InMemoryCredentialStorage implements CredentialStorageService {
   private tokens: Map<string, TokenData> = new Map();
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async storeToken(tokenData: TokenData): Promise<void> {
     this.tokens.set(tokenData.provider, tokenData);
     console.log(
@@ -38,6 +39,7 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getValidToken(provider = "linear"): Promise<TokenData | null> {
     const token = this.tokens.get(provider);
 
@@ -55,6 +57,7 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
     return token;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async getToken(provider = "linear"): Promise<TokenData | null> {
     return this.tokens.get(provider) || null;
   }
@@ -64,6 +67,7 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
     return token !== null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async clearTokens(provider = "linear"): Promise<void> {
     if (provider) {
       this.tokens.delete(provider);
@@ -75,6 +79,7 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async cleanupExpiredTokens(): Promise<number> {
     const now = Date.now();
     let cleanedCount = 0;
@@ -93,6 +98,7 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
     return cleanedCount;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async close(): Promise<void> {
     // Nothing to close for in-memory storage
     this.tokens.clear();
@@ -159,14 +165,14 @@ export class RedisCredentialStorage implements CredentialStorageService {
 
   async getValidToken(provider = "linear"): Promise<TokenData | null> {
     const key = this.getKey(provider);
-    const serializedData = (await redis.get(key)) as SuperJSONResult | null;
+    const serializedData: SuperJSONResult | null = await redis.get(key);
 
     if (!serializedData) {
       return null;
     }
 
     try {
-      const tokenData = deserialize(serializedData) as TokenData;
+      const tokenData: TokenData = deserialize(serializedData);
 
       // Double-check expiration (Redis TTL should handle this, but let's be safe)
       if (Date.now() >= tokenData.expiresAt) {
@@ -185,14 +191,14 @@ export class RedisCredentialStorage implements CredentialStorageService {
 
   async getToken(provider = "linear"): Promise<TokenData | null> {
     const key = this.getKey(provider);
-    const serializedData = (await redis.get(key)) as SuperJSONResult | null;
+    const serializedData: SuperJSONResult | null = await redis.get(key);
 
     if (!serializedData) {
       return null;
     }
 
     try {
-      return deserialize(serializedData) as TokenData;
+      return deserialize(serializedData);
     } catch (error) {
       console.error(`Failed to deserialize token for ${provider}:`, error);
       // Clean up corrupted data
@@ -230,19 +236,19 @@ export class RedisCredentialStorage implements CredentialStorageService {
     let cleanedCount = 0;
 
     for (const key of keys) {
-      const serializedData = (await redis.get(key)) as SuperJSONResult | null;
+      const serializedData: SuperJSONResult | null = await redis.get(key);
       if (!serializedData) {
         // Already expired and cleaned up by Redis
         continue;
       }
 
       try {
-        const tokenData = deserialize(serializedData) as TokenData;
+        const tokenData: TokenData = deserialize(serializedData);
         if (Date.now() >= tokenData.expiresAt) {
           await redis.del(key);
           cleanedCount++;
         }
-      } catch (error) {
+      } catch {
         // Clean up corrupted data
         await redis.del(key);
         cleanedCount++;
@@ -267,10 +273,10 @@ export class RedisCredentialStorage implements CredentialStorageService {
     const tokens = new Map<string, TokenData>();
 
     for (const key of keys) {
-      const serializedData = (await redis.get(key)) as SuperJSONResult | null;
+      const serializedData: SuperJSONResult | null = await redis.get(key);
       if (serializedData) {
         try {
-          const tokenData = deserialize(serializedData) as TokenData;
+          const tokenData: TokenData = deserialize(serializedData);
           const provider = key.replace(this.keyPrefix, "");
           tokens.set(provider, tokenData);
         } catch (error) {
@@ -294,7 +300,7 @@ export class RedisCredentialStorage implements CredentialStorageService {
     let expiredTokens = 0;
 
     for (const key of keys) {
-      const serializedData = (await redis.get(key)) as SuperJSONResult | null;
+      const serializedData: SuperJSONResult | null = await redis.get(key);
       if (!serializedData) {
         // Key existed but data is gone (expired)
         expiredTokens++;
@@ -302,13 +308,13 @@ export class RedisCredentialStorage implements CredentialStorageService {
       }
 
       try {
-        const tokenData = deserialize(serializedData) as TokenData;
+        const tokenData: TokenData = deserialize(serializedData);
         if (now >= tokenData.expiresAt) {
           expiredTokens++;
         } else {
           validTokens++;
         }
-      } catch (error) {
+      } catch {
         // Corrupted data counts as expired
         expiredTokens++;
       }

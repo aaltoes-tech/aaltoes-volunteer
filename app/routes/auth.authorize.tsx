@@ -9,7 +9,7 @@ const stateStore = new Map<string, { timestamp: number }>();
 export async function action({ request }: Route.ActionArgs) {
   await requireAdminAuth(request);
   if (request.method !== "POST") {
-    throw new Response("Method not allowed", { status: 405 });
+    throw new Error("Method not allowed");
   }
 
   try {
@@ -32,7 +32,7 @@ export async function action({ request }: Route.ActionArgs) {
     const redirectUri = `${url.protocol}//${url.host}/auth/callback`;
 
     // Generate authorization URL with actor=app
-    const authUrl = await oauth.generateAuthorizationUrl(redirectUri, state);
+    const authUrl = oauth.generateAuthorizationUrl(redirectUri, state);
 
     return redirect(authUrl);
   } catch (error) {

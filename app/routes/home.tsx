@@ -11,14 +11,14 @@ import {
 } from "~/components/ui/table";
 import { credentialStorage } from "~/lib/.server/oauth/storage";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "New React Router App" },
     { name: "description", content: "Welcome to React Router!" },
   ];
 }
 
-export async function loader({}: Route.LoaderArgs) {
+export async function loader() {
   const token = await credentialStorage.getToken("linear");
   if (!token) {
     return data({
