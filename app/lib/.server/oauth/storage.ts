@@ -1,6 +1,8 @@
+import type { SuperJSONResult } from "superjson";
+import { deserialize, serialize } from "superjson";
+
 import type { TokenData } from ".";
 import { redis } from "~/lib/.server/redis";
-import { serialize, deserialize, type SuperJSONResult } from "superjson";
 
 export interface CredentialStorageService {
   // Store a new token
@@ -34,8 +36,8 @@ export class InMemoryCredentialStorage implements CredentialStorageService {
     this.tokens.set(tokenData.provider, tokenData);
     console.log(
       `Stored token for ${tokenData.provider} (expires at ${new Date(
-        tokenData.expiresAt
-      ).toISOString()})`
+        tokenData.expiresAt,
+      ).toISOString()})`,
     );
   }
 
@@ -150,7 +152,7 @@ export class RedisCredentialStorage implements CredentialStorageService {
     // Calculate TTL in seconds from expiration timestamp
     const ttlSeconds = Math.max(
       1,
-      Math.floor((tokenData.expiresAt - Date.now()) / 1000)
+      Math.floor((tokenData.expiresAt - Date.now()) / 1000),
     );
 
     await redis.setex(key, ttlSeconds, serializedData);
@@ -158,8 +160,8 @@ export class RedisCredentialStorage implements CredentialStorageService {
       `Stored token for ${
         tokenData.provider
       } at ${key} in Redis (expires at ${new Date(
-        tokenData.expiresAt
-      ).toISOString()})`
+        tokenData.expiresAt,
+      ).toISOString()})`,
     );
   }
 
@@ -256,7 +258,9 @@ export class RedisCredentialStorage implements CredentialStorageService {
     }
 
     if (cleanedCount > 0) {
-      console.log(`Cleaned up ${cleanedCount.toString()} expired/corrupted tokens`);
+      console.log(
+        `Cleaned up ${cleanedCount.toString()} expired/corrupted tokens`,
+      );
     }
 
     return cleanedCount;

@@ -1,6 +1,6 @@
 export function validateAdminCredentials(
   username: string,
-  password: string
+  password: string,
 ): boolean {
   const adminUsername = process.env.ADMIN_USERNAME;
   const adminPassword = process.env.ADMIN_PASSWORD;
@@ -15,6 +15,8 @@ export function validateAdminCredentials(
 
 export function getAdminConfig() {
   return {
-    hasCredentials: !!(process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD),
+    hasCredentials: !!(
+      process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD
+    ),
   };
-} 
+}

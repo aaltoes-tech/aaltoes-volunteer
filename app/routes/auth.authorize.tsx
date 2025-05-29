@@ -1,7 +1,8 @@
-import type { Route } from "./+types/auth.authorize";
 import { redirect } from "react-router";
-import { oauth } from "../lib/.server/oauth";
+
+import type { Route } from "./+types/auth.authorize";
 import { requireAdminAuth } from "~/lib/.server/sessions";
+import { oauth } from "../lib/.server/oauth";
 
 // Store state in memory for validation (in production, use session storage)
 const stateStore = new Map<string, { timestamp: number }>();

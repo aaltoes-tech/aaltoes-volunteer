@@ -1,7 +1,8 @@
-import { Form, redirect, data } from "react-router";
+import { data, Form, redirect } from "react-router";
+
 import type { Route } from "./+types/admin.login";
-import { getSession, commitSession } from "~/lib/.server/sessions";
-import { validateAdminCredentials, getAdminConfig } from "~/lib/.server/auth";
+import { getAdminConfig, validateAdminCredentials } from "~/lib/.server/auth";
+import { commitSession, getSession } from "~/lib/.server/sessions";
 
 export function meta() {
   return [
@@ -28,7 +29,7 @@ export async function loader({ request }: Route.LoaderArgs) {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
-    }
+    },
   );
 }
 
@@ -75,15 +76,15 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
 
   if (!hasCredentials) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="flex min-h-screen flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Admin Login
           </h2>
         </div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <div className="bg-red-50 border border-red-200 rounded-md p-4">
+          <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
+            <div className="rounded-md border border-red-200 bg-red-50 p-4">
               <p className="text-sm text-red-600">
                 Admin credentials are not configured. Please set ADMIN_USERNAME
                 and ADMIN_PASSWORD environment variables.
@@ -96,7 +97,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Admin Login
@@ -107,9 +108,9 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-4">
               <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
@@ -129,7 +130,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
                   type="text"
                   autoComplete="username"
                   required
-                  className="text-black block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full rounded-md border border-gray-300 px-3 py-2 text-black placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
                 />
               </div>
             </div>
@@ -148,7 +149,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="text-black block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full rounded-md border border-gray-300 px-3 py-2 text-black placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
                 />
               </div>
             </div>
@@ -156,7 +157,7 @@ export default function AdminLogin({ loaderData }: Route.ComponentProps) {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
               >
                 Sign in
               </button>

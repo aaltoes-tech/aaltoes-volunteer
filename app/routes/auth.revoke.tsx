@@ -1,5 +1,6 @@
-import type { Route } from "./+types/auth.revoke";
 import { redirect } from "react-router";
+
+import type { Route } from "./+types/auth.revoke";
 import { linearService } from "~/lib/.server/linear";
 import { credentialStorage } from "~/lib/.server/oauth/storage";
 import { requireAdminAuth } from "~/lib/.server/sessions";

@@ -1,4 +1,5 @@
 import { LinearClient } from "@linear/sdk";
+
 import type { TokenData } from "./oauth";
 
 let linearClient: LinearClient | null = null;

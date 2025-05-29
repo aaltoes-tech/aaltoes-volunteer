@@ -22,10 +22,7 @@ function getOAuthConfig(): OAuthConfig | null {
 }
 
 // Generate authorization URL for Linear with actor=app
-function generateAuthorizationUrl(
-  redirectUri: string,
-  state: string
-): string {
+function generateAuthorizationUrl(redirectUri: string, state: string): string {
   const config = getOAuthConfig();
   if (!config) {
     throw new Error("OAuth configuration not set");
@@ -46,7 +43,7 @@ function generateAuthorizationUrl(
 // Exchange authorization code for access token
 async function exchangeCodeForToken(
   code: string,
-  redirectUri: string
+  redirectUri: string,
 ): Promise<TokenData> {
   const config = getOAuthConfig();
   if (!config) {
@@ -71,7 +68,7 @@ async function exchangeCodeForToken(
     throw new Error(`Token exchange failed: ${response.statusText}`);
   }
 
-  const data = await response.json() as {
+  const data = (await response.json()) as {
     access_token: string;
     expires_in: number;
   };
@@ -103,18 +100,19 @@ function getTokenExpirationInfo(token: TokenData): {
 
   const days = Math.floor(msUntilExpiration / (24 * 60 * 60 * 1000));
   const hours = Math.floor(
-    (msUntilExpiration % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
+    (msUntilExpiration % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000),
   );
 
   let timeString = "";
   if (days > 0) {
     timeString += `${days.toString()} day${days !== 1 ? "s" : ""}`;
-    if (hours > 0) timeString += `, ${hours.toString()} hour${hours !== 1 ? "s" : ""}`;
+    if (hours > 0)
+      timeString += `, ${hours.toString()} hour${hours !== 1 ? "s" : ""}`;
   } else if (hours > 0) {
     timeString += `${hours.toString()} hour${hours !== 1 ? "s" : ""}`;
   } else {
     const minutes = Math.floor(
-      (msUntilExpiration % (60 * 60 * 1000)) / (60 * 1000)
+      (msUntilExpiration % (60 * 60 * 1000)) / (60 * 1000),
     );
     timeString = `${minutes.toString()} minute${minutes !== 1 ? "s" : ""}`;
   }

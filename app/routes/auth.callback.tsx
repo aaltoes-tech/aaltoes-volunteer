@@ -1,9 +1,10 @@
-import type { Route } from "./+types/auth.callback";
 import { redirect } from "react-router";
-import { oauth } from "../lib/.server/oauth";
-import { stateStore } from "./auth.authorize";
+
+import type { Route } from "./+types/auth.callback";
 import { credentialStorage } from "~/lib/.server/oauth/storage";
 import { requireAdminAuth } from "~/lib/.server/sessions";
+import { oauth } from "../lib/.server/oauth";
+import { stateStore } from "./auth.authorize";
 
 export async function loader({ request }: Route.LoaderArgs) {
   await requireAdminAuth(request);
@@ -45,8 +46,8 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     console.log(
       `Successfully authorized Linear client with actor=app (expires at ${new Date(
-        tokenData.expiresAt
-      ).toUTCString()})`
+        tokenData.expiresAt,
+      ).toUTCString()})`,
     );
 
     // Redirect back to auth page
@@ -59,9 +60,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function AuthCallback() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
         <p className="mt-4 text-gray-600">Processing authorization...</p>
       </div>
     </div>
