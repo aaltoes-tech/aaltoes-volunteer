@@ -19,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { env } from "~/env";
 import { linearService } from "~/lib/.server/linear";
 import { credentialStorage } from "~/lib/.server/oauth/storage";
 
@@ -67,7 +68,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <div className="bg-background min-h-screen p-8">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-foreground font-game mb-8 text-center text-3xl font-bold">
-          Volunteer Portal
+          {env.ORG_NAME ? `${env.ORG_NAME} HelpMe!` : "HelpMe!"}
         </h1>
         <Table>
           <TableHeader>
