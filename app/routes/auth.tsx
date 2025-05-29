@@ -149,7 +149,7 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Storage:</span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                  ✓ In-Memory
+                  ✓ Redis
                 </span>
               </div>
             </div>
