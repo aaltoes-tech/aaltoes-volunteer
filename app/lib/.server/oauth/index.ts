@@ -1,3 +1,5 @@
+import { env } from "~/env";
+
 interface OAuthConfig {
   clientId: string;
   clientSecret: string;
@@ -11,22 +13,16 @@ export interface TokenData {
 }
 
 // Get OAuth configuration
-function getOAuthConfig(): OAuthConfig | null {
-  if (process.env.LINEAR_CLIENT_ID && process.env.LINEAR_CLIENT_SECRET) {
-    return {
-      clientId: process.env.LINEAR_CLIENT_ID,
-      clientSecret: process.env.LINEAR_CLIENT_SECRET,
-    };
-  }
-  return null;
+function getOAuthConfig(): OAuthConfig {
+  return {
+    clientId: env.LINEAR_CLIENT_ID,
+    clientSecret: env.LINEAR_CLIENT_SECRET,
+  };
 }
 
 // Generate authorization URL for Linear with actor=app
 function generateAuthorizationUrl(redirectUri: string, state: string): string {
   const config = getOAuthConfig();
-  if (!config) {
-    throw new Error("OAuth configuration not set");
-  }
 
   const params = new URLSearchParams({
     client_id: config.clientId,
@@ -46,9 +42,6 @@ async function exchangeCodeForToken(
   redirectUri: string,
 ): Promise<TokenData> {
   const config = getOAuthConfig();
-  if (!config) {
-    throw new Error("OAuth configuration not set");
-  }
 
   const response = await fetch("https://api.linear.app/oauth/token", {
     method: "POST",

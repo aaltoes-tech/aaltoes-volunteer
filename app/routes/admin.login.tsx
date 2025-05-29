@@ -3,7 +3,7 @@ import { data, Form, redirect } from "react-router";
 import type { Route } from "./+types/admin.login";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { getAdminConfig, validateAdminCredentials } from "~/lib/.server/auth";
+import { validateAdminCredentials } from "~/lib/.server/auth";
 import { commitSession, getSession } from "~/lib/.server/sessions";
 
 export function meta() {
@@ -15,7 +15,6 @@ export function meta() {
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await getSession(request.headers.get("Cookie"));
-  const adminConfig = getAdminConfig();
 
   // Redirect if already authenticated
   if (session.get("isAdminAuthenticated")) {
@@ -25,7 +24,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   return data(
     {
       error: session.get("error"),
-      hasCredentials: adminConfig.hasCredentials,
     },
     {
       headers: {
@@ -74,39 +72,7 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function AdminLogin({ loaderData }: Route.ComponentProps) {
-  const { error, hasCredentials } = loaderData;
-
-  if (!hasCredentials) {
-    return (
-      <div className="bg-muted min-h-screen px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-md">
-          <div className="text-center">
-            <h2 className="text-foreground mt-6 text-3xl font-extrabold">
-              Admin Login
-            </h2>
-            <p className="text-muted-foreground mt-2 text-sm">
-              Administrative access required
-            </p>
-          </div>
-          <div className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>Configuration Required</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-md border border-red-200 bg-red-50 p-4">
-                  <p className="text-sm text-red-600">
-                    Admin credentials are not configured. Please set
-                    ADMIN_USERNAME and ADMIN_PASSWORD environment variables.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const { error } = loaderData;
 
   return (
     <div className="bg-muted min-h-screen px-4 py-12 sm:px-6 lg:px-8">

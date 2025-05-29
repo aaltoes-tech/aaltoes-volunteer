@@ -26,8 +26,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     return {
       isLinearClientInitialized: false,
       hasAccessToken: false,
-      hasOAuthConfig: !!oauthConfig,
-      oauthConfigClientId: oauthConfig?.clientId.substring(0, 8)
+      oauthConfigClientId: oauthConfig.clientId.substring(0, 8)
         ? oauthConfig.clientId.substring(0, 8) + "..."
         : "Not set",
       isTokenExpired: false,
@@ -41,8 +40,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   return {
     isLinearClientInitialized: !!linearClient,
     hasAccessToken: !!tokenData,
-    hasOAuthConfig: !!oauthConfig,
-    oauthConfigClientId: oauthConfig?.clientId.substring(0, 8)
+    oauthConfigClientId: oauthConfig.clientId.substring(0, 8)
       ? oauthConfig.clientId.substring(0, 8) + "..."
       : "Not set",
     isTokenExpired: tokenInfo.isExpired,
@@ -54,7 +52,6 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
   const {
     isLinearClientInitialized,
     hasAccessToken,
-    hasOAuthConfig,
     oauthConfigClientId,
     isTokenExpired,
     tokenExpirationInfo,
@@ -79,21 +76,6 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground text-sm">
-                    OAuth Configuration:
-                  </span>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      hasOAuthConfig
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {hasOAuthConfig ? "✓ Configured" : "✗ Not configured"}
-                  </span>
-                </div>
-
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground text-sm">
                     Client ID:

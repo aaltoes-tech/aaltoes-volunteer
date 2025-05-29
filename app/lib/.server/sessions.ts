@@ -1,5 +1,7 @@
 import { createCookieSessionStorage } from "react-router";
 
+import { env } from "~/env";
+
 interface SessionData {
   isAdminAuthenticated: boolean;
   userId: string;
@@ -18,10 +20,8 @@ const { getSession, commitSession, destroySession } =
       maxAge: 60 * 60 * 24, // 24 hours
       path: "/",
       sameSite: "lax",
-      secrets: [
-        process.env.SESSION_SECRET ?? "default-secret-change-in-production",
-      ],
-      secure: process.env.NODE_ENV === "production",
+      secrets: [env.SESSION_SECRET],
+      secure: env.NODE_ENV === "production",
     },
   });
 

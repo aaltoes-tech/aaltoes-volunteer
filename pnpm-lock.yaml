@@ -22,6 +22,9 @@ importers:
       "@react-router/serve":
         specifier: ^7.5.3
         version: 7.6.1(react-router@7.6.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.3)
+      "@t3-oss/env-core":
+        specifier: ^0.13.6
+        version: 0.13.6(typescript@5.8.3)(zod@3.25.36)
       "@upstash/redis":
         specifier: ^1.34.9
         version: 1.34.9
@@ -1064,6 +1067,26 @@ packages:
       }
     cpu: [x64]
     os: [win32]
+
+  "@t3-oss/env-core@0.13.6":
+    resolution:
+      {
+        integrity: sha512-rH7FgcB1YGbv/tvv7mdJAxnNvRkK/gEqdVYBwO1AVvaWOTNuftqskxkEYyhM2O+lkNPJmTq5YBE7H+Unl7CLjg==,
+      }
+    peerDependencies:
+      arktype: ^2.1.0
+      typescript: ">=5.0.0"
+      valibot: ^1.0.0-beta.7 || ^1.0.0
+      zod: ^3.24.0 || ^4.0.0-beta.0
+    peerDependenciesMeta:
+      arktype:
+        optional: true
+      typescript:
+        optional: true
+      valibot:
+        optional: true
+      zod:
+        optional: true
 
   "@tailwindcss/node@4.1.8":
     resolution:
@@ -4905,6 +4928,11 @@ snapshots:
 
   "@rollup/rollup-win32-x64-msvc@4.41.1":
     optional: true
+
+  "@t3-oss/env-core@0.13.6(typescript@5.8.3)(zod@3.25.36)":
+    optionalDependencies:
+      typescript: 5.8.3
+      zod: 3.25.36
 
   "@tailwindcss/node@4.1.8":
     dependencies:
