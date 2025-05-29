@@ -1,8 +1,11 @@
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import type { Route } from "./+types/auth";
 import { linearService } from "~/lib/.server/linear";
 import { oauth } from "~/lib/.server/oauth";
 import { credentialStorage } from "~/lib/.server/oauth/storage";
 import { requireAdminAuth } from "~/lib/.server/sessions";
+import { Link } from "react-router";
+import { Button } from "~/components/ui/button";
 
 export function meta() {
   return [
@@ -57,160 +60,171 @@ export default function Auth({ loaderData }: Route.ComponentProps) {
   } = loaderData;
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-muted px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-3xl font-extrabold text-foreground">
             Linear OAuth Authentication
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-muted-foreground">
             Manage your Linear API integration with actor=app authorization
           </p>
         </div>
 
         <div className="mt-8 space-y-6">
-          <div className="rounded-lg bg-white p-6 shadow">
-            <h3 className="mb-4 text-lg font-medium text-gray-900">Status</h3>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">
-                  OAuth Configuration:
-                </span>
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    hasOAuthConfig
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {hasOAuthConfig ? "✓ Configured" : "✗ Not configured"}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Client ID:</span>
-                <span className="font-mono text-sm text-gray-900">
-                  {oauthConfigClientId}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Access Token:</span>
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    hasAccessToken && !isTokenExpired
-                      ? "bg-green-100 text-green-800"
-                      : isTokenExpired
-                        ? "bg-red-100 text-red-800"
-                        : "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {hasAccessToken && !isTokenExpired
-                    ? "✓ Valid"
-                    : isTokenExpired
-                      ? "✗ Expired"
-                      : "✗ Not available"}
-                </span>
-              </div>
-
-              {!!tokenExpirationInfo && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Token Expires:</span>
+                  <span className="text-sm text-muted-foreground">
+                    OAuth Configuration:
+                  </span>
                   <span
-                    className={`text-xs ${
-                      tokenExpirationInfo.isExpired
-                        ? "text-red-600"
-                        : "text-gray-900"
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      hasOAuthConfig
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
                     }`}
                   >
-                    {tokenExpirationInfo.isExpired
-                      ? "Expired"
-                      : tokenExpirationInfo.timeUntilExpiration
-                        ? `In ${tokenExpirationInfo.timeUntilExpiration}`
-                        : "Unknown"}
+                    {hasOAuthConfig ? "✓ Configured" : "✗ Not configured"}
                   </span>
                 </div>
-              )}
 
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Linear Client:</span>
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    isLinearClientInitialized
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {isLinearClientInitialized
-                    ? "✓ Initialized"
-                    : "✗ Not initialized"}
-                </span>
-              </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Client ID:
+                  </span>
+                  <span className="font-mono text-sm text-foreground">
+                    {oauthConfigClientId}
+                  </span>
+                </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Storage:</span>
-                <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                  ✓ Redis
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg bg-white p-6 shadow">
-            <h3 className="mb-4 text-lg font-medium text-gray-900">Actions</h3>
-
-            {!isLinearClientInitialized || isTokenExpired ? (
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600">
-                  {isTokenExpired
-                    ? "Your token has expired. Re-authorize to continue using the Linear API."
-                    : "Authorize this application to act on behalf of your Linear workspace using the actor=app flow. This allows the application to create issues and comments as the app rather than individual users."}
-                </p>
-
-                <form action="/auth/authorize" method="post">
-                  <button
-                    type="submit"
-                    className="flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Access Token:
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      hasAccessToken && !isTokenExpired
+                        ? "bg-green-100 text-green-800"
+                        : isTokenExpired
+                        ? "bg-red-100 text-red-800"
+                        : "bg-muted text-muted-foreground"
+                    }`}
                   >
-                    {isTokenExpired
-                      ? "Re-authorize with Linear"
-                      : "Authorize with Linear (actor=app)"}
-                  </button>
-                </form>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-sm text-green-600">
-                  ✓ Successfully authorized! The Linear client is initialized
-                  and ready to use.
-                  {!!tokenExpirationInfo && (
-                    <span className="mt-1 block text-gray-600">
-                      Token expires in {tokenExpirationInfo.timeUntilExpiration}
-                      .
+                    {hasAccessToken && !isTokenExpired
+                      ? "✓ Valid"
+                      : isTokenExpired
+                      ? "✗ Expired"
+                      : "✗ Not available"}
+                  </span>
+                </div>
+
+                {!!tokenExpirationInfo && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Token Expires:
                     </span>
-                  )}
-                </p>
+                    <span
+                      className={`text-xs ${
+                        tokenExpirationInfo.isExpired
+                          ? "text-red-600"
+                          : "text-foreground"
+                      }`}
+                    >
+                      {tokenExpirationInfo.isExpired
+                        ? "Expired"
+                        : tokenExpirationInfo.timeUntilExpiration
+                        ? `In ${tokenExpirationInfo.timeUntilExpiration}`
+                        : "Unknown"}
+                    </span>
+                  </div>
+                )}
 
-                <form action="/auth/revoke" method="post">
-                  <button
-                    type="submit"
-                    className="flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Linear Client:
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      isLinearClientInitialized
+                        ? "bg-green-100 text-green-800"
+                        : "bg-muted text-muted-foreground"
+                    }`}
                   >
-                    Revoke Authorization
-                  </button>
-                </form>
-              </div>
-            )}
-          </div>
+                    {isLinearClientInitialized
+                      ? "✓ Initialized"
+                      : "✗ Not initialized"}
+                  </span>
+                </div>
 
-          <div className="text-center">
-            <a
-              href="/"
-              className="text-sm font-medium text-blue-600 hover:text-blue-500"
-            >
-              ← Back to Home
-            </a>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Storage:
+                  </span>
+                  <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                    ✓ Redis
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {!isLinearClientInitialized || isTokenExpired ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    {isTokenExpired
+                      ? "Your token has expired. Re-authorize to continue using the Linear API."
+                      : "Authorize this application to act on behalf of your Linear workspace using the actor=app flow. This allows the application to create issues and comments as the app rather than individual users."}
+                  </p>
+
+                  <form action="/auth/authorize" method="post">
+                    <Button className="w-full" type="submit" variant="default">
+                      {isTokenExpired
+                        ? "Re-authorize with Linear"
+                        : "Authorize with Linear (actor=app)"}
+                    </Button>
+                  </form>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-sm text-green-600">
+                    ✓ Successfully authorized! The Linear client is initialized
+                    and ready to use.
+                    {!!tokenExpirationInfo && (
+                      <span className="mt-1 block text-muted-foreground">
+                        Token expires in{" "}
+                        {tokenExpirationInfo.timeUntilExpiration}.
+                      </span>
+                    )}
+                  </p>
+
+                  <form action="/auth/revoke" method="post">
+                    <Button
+                      className="w-full"
+                      type="submit"
+                      variant="destructive"
+                    >
+                      Revoke Authorization
+                    </Button>
+                  </form>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-center">
+            <Button variant="ghost" asChild>
+              <Link to="/">← Back to Home</Link>
+            </Button>
           </div>
         </div>
       </div>
