@@ -1,68 +1,183 @@
-# AaltoES TaskBridge
+# Aaltoes HelpMe! 🚀
 
-A React Router v7 application with Linear OAuth integration using the `actor=app` authorization flow.
+A task management and issue tracking web application that integrates with Linear to help organizations expose their pending issues to the community. Originally designed for Aaltoes, this tool bridges the gap between task assignment and community contribution.
 
-## Features
+## 🌟 Features
 
-- Linear OAuth2 integration with `actor=app` parameter
-- Server-side authorization flow implementation
-- Real-time status display of Linear client initialization
-- Secure state management for OAuth flow
+- **Linear Integration**: OAuth integration with Linear for issue management
+- **Task Visualization**: Clean, game-inspired UI for viewing available issues
+- **Point-based System**: Estimate-based task scoring for prioritization
+- **Admin Dashboard**: Secure admin authentication for system management
+- **Real-time Updates**: Live synchronization with Linear workspace
+- **Responsive Design**: Modern, mobile-friendly interface built with Tailwind CSS
 
-## Setup
+## 🛠️ Technology Stack
 
-### 1. Install Dependencies
+- **Frontend**: React 19 + React Router 7
+- **Backend**: Node.js with React Router SSR
+- **Styling**: Tailwind CSS + Radix UI components
+- **Database**: Upstash Redis for session and token storage
+- **Authentication**: Linear OAuth2 + Admin session management
+- **Package Manager**: pnpm
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 20 or higher
+- pnpm (recommended) or npm
+- Linear account with API access
+- Upstash Redis instance
+
+### Environment Setup
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd aaltoes-helpme
+```
+
+2. Install dependencies:
 
 ```bash
 pnpm install
 ```
 
-### 2. Configure Linear OAuth
-
-1. Go to your Linear workspace settings
-2. Create a new OAuth2 Application
-3. Set the redirect URL to: `http://localhost:5173/auth/callback` (for development)
-4. Note down your Client ID and Client Secret
-
-### 3. Environment Variables
-
-Create a `.env` file (optional - the app will use placeholder values for demo):
+3. Set up environment variables:
 
 ```bash
-LINEAR_CLIENT_ID=your_linear_client_id
-LINEAR_CLIENT_SECRET=your_linear_client_secret
+cp env.example .env
 ```
 
-### 4. Run the Application
+4. Configure your `.env` file:
+
+```env
+# Linear OAuth Configuration
+LINEAR_CLIENT_ID=your_linear_client_id
+LINEAR_CLIENT_SECRET=your_linear_client_secret
+LINEAR_REDIRECT_URI=http://localhost:5173/auth
+
+# Upstash Redis Configuration
+KV_REST_API_URL=https://your-redis-instance.upstash.io
+KV_REST_API_TOKEN=your_redis_token
+
+# Admin Authentication
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_secure_password
+
+# Application Configuration
+SESSION_SECRET=your_session_secret_here
+ORG_NAME=Aaltoes
+NODE_ENV=development
+```
+
+### Development
+
+Start the development server:
 
 ```bash
 pnpm dev
 ```
 
-Visit `http://localhost:5173` and navigate to the "Linear OAuth (actor=app)" link to start the authorization flow.
+The application will be available at `http://localhost:5173`
 
-## OAuth Flow
+### Building for Production
 
-The application implements the Linear OAuth2 flow with the following features:
+```bash
+pnpm build
+pnpm start
+```
 
-1. **Actor=App Authorization**: Uses `actor=app` parameter so the application acts as itself rather than individual users
-2. **Server-side Implementation**: All OAuth logic is handled server-side for security
-3. **State Validation**: Implements CSRF protection using state parameters
-4. **In-memory Storage**: Credentials and tokens are stored in memory (for production, use persistent storage)
+## 🔧 Configuration
 
-## Routes
+### Linear OAuth Setup
 
-- `/` - Home page with link to OAuth
-- `/auth` - OAuth status and authorization management
-- `/auth/authorize` - Redirects to Linear OAuth
-- `/auth/callback` - Handles OAuth callback
-- `/auth/revoke` - Revokes authorization
+1. Go to your Linear organization settings
+2. Navigate to **API** → **OAuth Applications**
+3. Create a new application with:
+   - **Redirect URI**: `http://localhost:5173/auth/callback` (development) or your production URL
+   - **Scopes**: Select appropriate permissions for issue management
 
-## Technical Details
+### Upstash Redis Setup
 
-- **Framework**: React Router v7
-- **OAuth Library**: openid-client (v6)
-- **Linear SDK**: @linear/sdk
-- **Styling**: Tailwind CSS
+1. Create an account at [Upstash](https://upstash.com)
+2. Create a new Redis database
+3. Copy the REST API URL and token to your environment variables
 
-The implementation follows Linear's OAuth2 documentation and uses the `actor=app` parameter to allow the application to create issues and comments as the app rather than individual users.
+Alternatively, use Vercel Marketplace to set up Upstash Redis.
+
+## 📖 Usage
+
+### Admin Workflow
+
+1. Navigate to `/admin/login` and authenticate with admin credentials
+2. Go to `/auth` to set up Linear OAuth integration
+3. Authorize the application to access your Linear workspace
+4. The system will now sync issues assigned to the authenticated user
+
+### User Experience
+
+- Visit the home page to view available issues
+- Issues are displayed with titles, point estimates, and descriptions
+- Click the info icon to view full issue details
+- Task claiming functionality is coming soon
+
+## 🏗️ Architecture
+
+```
+app/
+├── routes/           # Application routes and pages
+│   ├── home.tsx     # Main task dashboard
+│   ├── auth.tsx     # OAuth management
+│   └── admin.*      # Admin authentication
+├── lib/
+│   ├── .server/     # Server-side utilities
+│   │   ├── linear.ts    # Linear API integration
+│   │   ├── oauth/       # OAuth flow management
+│   │   └── sessions.ts  # Session management
+│   └── utils.ts     # Client utilities
+├── components/      # Reusable UI components
+└── app.css         # Global styles
+```
+
+## 🚧 Roadmap
+
+- [ ] Task claiming functionality
+- [ ] User authentication system
+- [ ] Advanced filtering and search
+- [ ] Notification system
+- [ ] Analytics dashboard
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📝 Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm typecheck` - Run TypeScript type checking
+- `pnpm lint` - Run ESLint
+- `pnpm format` - Format code with Prettier
+
+## 📄 License
+
+This project is part of the Aaltoes organization. Licensed under the MIT license.
+
+## 🆘 Support
+
+For support and questions:
+
+- Open an issue in this repository
+- Contact the Aaltoes development team
+- Check the Linear integration documentation
+
+---
+
+Built with ❤️ by the Aaltoes community
