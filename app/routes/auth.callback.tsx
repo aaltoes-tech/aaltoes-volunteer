@@ -1,10 +1,9 @@
 import type { Route } from "./+types/auth.callback";
 import { redirect } from "react-router";
-import { oauth } from "../lib/oauth";
-import { linearService } from "../lib/linear";
+import { oauth } from "../lib/.server/oauth";
 import { stateStore } from "./auth.authorize";
-import { credentialStorage } from "~/lib/cred-storage";
-import { requireAdminAuth } from "~/lib/sessions.server";
+import { credentialStorage } from "~/lib/.server/oauth/storage";
+import { requireAdminAuth } from "~/lib/.server/sessions";
 
 export async function loader({ request }: Route.LoaderArgs) {
   await requireAdminAuth(request);

@@ -1,5 +1,5 @@
-import type { TokenData } from "./oauth";
-import { redis } from "./redis";
+import type { TokenData } from ".";
+import { redis } from "~/lib/.server/redis";
 import { serialize, deserialize, type SuperJSONResult } from "superjson";
 
 export interface CredentialStorageService {

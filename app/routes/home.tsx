@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 import { data } from "react-router";
-import { linearService } from "~/lib/linear";
+import { linearService } from "~/lib/.server/linear";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { credentialStorage } from "~/lib/cred-storage";
+import { credentialStorage } from "~/lib/.server/oauth/storage";
 
 export function meta({}: Route.MetaArgs) {
   return [

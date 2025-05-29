@@ -1,7 +1,7 @@
 import { Form, redirect, data } from "react-router";
 import type { Route } from "./+types/admin.login";
-import { getSession, commitSession } from "~/lib/sessions.server";
-import { validateAdminCredentials, getAdminConfig } from "~/lib/auth.server";
+import { getSession, commitSession } from "~/lib/.server/sessions";
+import { validateAdminCredentials, getAdminConfig } from "~/lib/.server/auth";
 
 export function meta({}: Route.MetaArgs) {
   return [

@@ -1,8 +1,8 @@
 import type { Route } from "./+types/auth.revoke";
 import { redirect } from "react-router";
-import { linearService } from "../lib/linear";
-import { credentialStorage } from "~/lib/cred-storage";
-import { requireAdminAuth } from "~/lib/sessions.server";
+import { linearService } from "~/lib/.server/linear";
+import { credentialStorage } from "~/lib/.server/oauth/storage";
+import { requireAdminAuth } from "~/lib/.server/sessions";
 
 export async function action({ request }: Route.ActionArgs) {
   await requireAdminAuth(request);

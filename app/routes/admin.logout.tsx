@@ -5,7 +5,7 @@ import {
   getAdminUser,
   getSession,
   destroySession,
-} from "~/lib/sessions.server";
+} from "~/lib/.server/sessions";
 
 export function meta({}: Route.MetaArgs) {
   return [

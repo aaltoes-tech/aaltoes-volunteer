@@ -1,8 +1,8 @@
 import type { Route } from "./+types/auth";
-import { oauth } from "~/lib/oauth";
-import { credentialStorage } from "~/lib/cred-storage";
-import { linearService } from "~/lib/linear";
-import { requireAdminAuth } from "~/lib/sessions.server";
+import { oauth } from "~/lib/.server/oauth";
+import { credentialStorage } from "~/lib/.server/oauth/storage";
+import { linearService } from "~/lib/.server/linear";
+import { requireAdminAuth } from "~/lib/.server/sessions";
 
 export function meta({}: Route.MetaArgs) {
   return [
