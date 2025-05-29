@@ -19,6 +19,7 @@ export async function action({ request }: Route.ActionArgs) {
       return redirect("/auth?error=no_token_found");
     }
 
+    await credentialStorage.clearTokens("linear");
     await linearService.clearLinearClient(tokenData);
 
     console.log("Successfully revoked Linear authorization");
