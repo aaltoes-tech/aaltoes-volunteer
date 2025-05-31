@@ -20,7 +20,7 @@ export const env = createEnv({
   clientPrefix: "PUBLIC_",
 
   client: {
-    PUBLIC_ORG_NAME: z.string().min(1),
+    PUBLIC_WELCOME_MESSAGE: z.string().min(1),
     PUBLIC_LINEAR_ORG_URL: z.string().min(1),
     PUBLIC_OPEN_ISSUE_URL: z.string().min(1),
   },
