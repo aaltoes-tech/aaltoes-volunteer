@@ -1,15 +1,7 @@
-import { Info } from "lucide-react";
-import { data } from "react-router";
+import { data, Link } from "react-router";
 
 import type { Route } from "./+types/home";
 import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -54,6 +46,7 @@ export async function loader() {
   return data({
     issues: issues.nodes.map((issue) => ({
       id: issue.id,
+      humanId: issue.identifier,
       title: issue.title,
       description: issue.description,
       estimate: issue.estimate ?? "1",
@@ -72,36 +65,36 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="font-mono text-xl">
-                Available Issues
-              </TableHead>
+              <TableHead className="font-mono text-xl">Issue ID</TableHead>
+              <TableHead className="font-mono text-xl">Title</TableHead>
               <TableHead className="font-mono text-xl">Points</TableHead>
               <TableHead className="font-mono text-xl">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {issues.map((issue) => (
-              <Dialog key={issue.id}>
-                <TableRow>
-                  <TableCell>{issue.title}</TableCell>
-                  <TableCell>{issue.estimate}</TableCell>
-                  <TableCell>
-                    <DialogTrigger asChild>
-                      <Button className="-my-1.5" variant="ghost" size="icon">
-                        <Info className="h-4 w-4" />
-                      </Button>
-                    </DialogTrigger>
-                  </TableCell>
-                </TableRow>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>{issue.title}</DialogTitle>
-                  </DialogHeader>
-                  <p className="text-foreground text-sm whitespace-pre-wrap">
-                    {issue.description}
-                  </p>
-                </DialogContent>
-              </Dialog>
+              <TableRow key={issue.id}>
+                <TableCell>
+                  <Link
+                    to={`${env.LINEAR_ORG_URL}/issue/${issue.humanId}`}
+                    target="_blank"
+                  >
+                    {issue.humanId}
+                  </Link>
+                </TableCell>
+                <TableCell>{issue.title}</TableCell>
+                <TableCell>{issue.estimate}</TableCell>
+                <TableCell>
+                  <Button asChild>
+                    <Link
+                      to={`${env.OPEN_ISSUE_URL}${issue.humanId}`}
+                      target="_blank"
+                    >
+                      Claim
+                    </Link>
+                  </Button>
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>

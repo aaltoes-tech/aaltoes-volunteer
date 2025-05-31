@@ -11,6 +11,9 @@ export const env = createEnv({
     SESSION_SECRET: z.string().min(1),
     KV_REST_API_URL: z.string().min(1),
     KV_REST_API_TOKEN: z.string().min(1),
+
+    LINEAR_ORG_URL: z.string().min(1),
+    OPEN_ISSUE_URL: z.string().min(1),
   },
 
   /**
