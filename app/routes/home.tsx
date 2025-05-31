@@ -41,6 +41,11 @@ export async function loader() {
           eq: true,
         },
       },
+      state: {
+        type: {
+          in: ["started", "unstarted"],
+        },
+      },
     },
   });
   return data({
