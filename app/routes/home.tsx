@@ -76,7 +76,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <TableRow key={issue.id}>
                 <TableCell>
                   <Link
-                    to={`${env.LINEAR_ORG_URL}/issue/${issue.humanId}`}
+                    to={`${env.PUBLIC_LINEAR_ORG_URL}/issue/${issue.humanId}`}
                     target="_blank"
                   >
                     {issue.humanId}
@@ -87,7 +87,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 <TableCell>
                   <Button asChild>
                     <Link
-                      to={`${env.OPEN_ISSUE_URL}${issue.humanId}`}
+                      to={`${env.PUBLIC_OPEN_ISSUE_URL}${issue.humanId}`}
                       target="_blank"
                     >
                       Claim
