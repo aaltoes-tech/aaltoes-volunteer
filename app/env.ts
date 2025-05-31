@@ -20,12 +20,9 @@ export const env = createEnv({
   clientPrefix: "PUBLIC_",
 
   client: {
-    PUBLIC_ORG_NAME: z.string().min(1).optional(),
-    PUBLIC_LINEAR_ORG_URL: z.string().min(1).default("https://linear.app/org"),
-    PUBLIC_OPEN_ISSUE_URL: z
-      .string()
-      .min(1)
-      .default("https://t.me/bot?text=%2Ftask%20%20"),
+    PUBLIC_ORG_NAME: z.string().min(1),
+    PUBLIC_LINEAR_ORG_URL: z.string().min(1),
+    PUBLIC_OPEN_ISSUE_URL: z.string().min(1),
   },
 
   /**
