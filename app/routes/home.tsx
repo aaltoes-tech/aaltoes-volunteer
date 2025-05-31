@@ -95,7 +95,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                       to={`${env.PUBLIC_OPEN_ISSUE_URL}${issue.humanId}`}
                       target="_blank"
                     >
-                      Claim
+                      View
                     </Link>
                   </Button>
                 </TableCell>
